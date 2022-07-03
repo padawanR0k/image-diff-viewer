@@ -1,7 +1,7 @@
 {
-  "name": "vite-react-ts",
-  "version": "0.0.0",
-  "description": "React Typescript Starter Template with Vite",
+  "name": "image-diff-checker",
+  "version": "0.0.1",
+  "description": "image diff checker",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/uchihamalolan/vite-react-ts.git"

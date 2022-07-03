@@ -11,3 +11,36 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+main {
+  margin: auto auto;
+  width: 90%;
+  margin-top: 50%;
+  transform: translateY(-50%);
+}
+
+.paste-area, .img-area {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.paste-area {
+  margin-bottom: 16px;
+}
+.paste-area textarea {
+  width: 33.33%;
+  border: 1px solid #333;
+}
+
+.img-area > .img-container {
+  display: flex;
+  justify-content: center;
+  width: 33.33%;
+  aspect-ratio: 1/1;
+  background: grey;
+}
+
+.img-container img {
+  height: 100%;
+}

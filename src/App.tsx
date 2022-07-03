@@ -32,7 +32,8 @@ function App() {
 
   const isEmpty = (src: string) => !src || src === 'http://localhost:3000/';
 
-  const copyEventCallback = ($img) => async (evt) => {
+  const copyEventCallback = ($img: HTMLImageElement | null) => async (evt: ClipboardEvent) => {
+    if (!$img) return
     // Get the data of clipboard
     const clipboardItems = evt.clipboardData?.items;
     const items = [].slice.call(clipboardItems).filter((item: any) => {

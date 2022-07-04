@@ -14,7 +14,7 @@
   ],
   "author": "Malolan B. <uchihamalolan@gmail.com> (https://twitter.com/malolan12)",
   "license": "MIT",
-  "homepage": "https://github.com/padawanR0k/image-diff-viewer",
+  "homepage": "https://padawanr0k.github.io/image-diff-viewer",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

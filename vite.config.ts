@@ -18,4 +18,5 @@ export default defineConfig({
   build: {
     sourcemap: true,
   },
+  base: 'https://padawanr0k.github.io/image-diff-viewer'
 });

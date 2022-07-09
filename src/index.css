@@ -17,6 +17,14 @@ main {
   width: 90%;
 }
 
+.describe {
+  margin: 16px 0px;
+  padding: 16px;
+  text-align: center;
+  background-color: #ddd;
+  border-radius: 10px;
+}
+
 .paste-area, .img-area {
   display: flex;
   justify-content: space-between;

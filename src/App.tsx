@@ -68,6 +68,7 @@ function App() {
   return (
     <div className="App">
       <main>
+        <p className="describe" >이미지 복사후 양쪽의 textarea에 붙여넣기를 하면, 두 이미지의 차이를 시각화하여 보여줍니다.</p>
         <section className="paste-area">
           <textarea ref={boxRef1} className="box left" contentEditable={true} suppressContentEditableWarning={true} />
           <textarea ref={boxRef2} className="box right" contentEditable={true} suppressContentEditableWarning={true} />

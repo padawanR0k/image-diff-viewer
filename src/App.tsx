@@ -1,6 +1,7 @@
 import {useState, useEffect, useRef} from "react";
 
 import resemble from 'resemblejs'
+import {getSmallSize, isDifferentSize, resizeImage} from "./utils/resize";
 
 
 function App() {
@@ -17,9 +18,7 @@ function App() {
       try {
         resemble(img1)
           .compareTo(img2)
-          // .setReturnEarlyThreshold(8)
           .onComplete((data) => {
-            /* do something */
             const url = data.getImageDataUrl();
             resolve(url);
           })
@@ -30,29 +29,43 @@ function App() {
     });
   }
 
-  const isEmpty = (src: string) => !src || src === 'http://localhost:3000/';
+  const isEmpty = (src: string) => {
+    return  !src || src === location.href;
+  }
 
   const copyEventCallback = ($img: HTMLImageElement | null) => async (evt: ClipboardEvent) => {
     if (!$img) return
-    // Get the data of clipboard
+
     const clipboardItems = evt.clipboardData?.items;
     const items = [].slice.call(clipboardItems).filter((item: any) => {
-      // Filter the image items only
       return item?.type?.indexOf('image') !== -1;
     });
+    
     if (items.length === 0) {
       return;
     }
 
-    console.count()
-
     const item = items[0] as any;
     const blob = item.getAsFile();
-    $img.src = URL.createObjectURL(blob);
 
-    if (!isEmpty(imgRef2.current!.src) && !isEmpty(imgRef1.current!.src)) {
-      const result = await getCompareResult(imgRef1.current!.src, imgRef2.current!.src) as string;
-      setResultImg(result || 'https://http.cat/400');
+    $img.src = URL.createObjectURL(blob);
+    $img.blob = blob;
+
+    $img.onload = async () => {
+      if (!isEmpty(imgRef2.current!.src) && !isEmpty(imgRef1.current!.src)) {
+        let a = imgRef1.current!.src;
+        let b = imgRef2.current!.src;
+
+        if (isDifferentSize(imgRef1!.current!, imgRef2.current!)) {
+          const size = getSmallSize(imgRef1.current!, imgRef2.current!)
+
+          a = await resizeImage(imgRef1.current!.blob, size.width, size.height)
+          b = await resizeImage(imgRef2.current!.blob, size.width, size.height)
+        }
+
+        const result = await getCompareResult(a, b) as string;
+        setResultImg(result || 'https://http.cat/400');
+      }
     }
   }
 

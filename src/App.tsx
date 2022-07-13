@@ -12,6 +12,7 @@ function App() {
 
   const [resultImg, setResultImg] = useState<string>('');
 
+  const blobs = useRef<{ [key: string]: any }>({});
 
   const getCompareResult = (img1: string | ImageData | Buffer, img2:  string | ImageData | Buffer) => {
     return new Promise((resolve, reject) => {
@@ -33,14 +34,14 @@ function App() {
     return  !src || src === location.href;
   }
 
-  const copyEventCallback = ($img: HTMLImageElement | null) => async (evt: ClipboardEvent) => {
+  const copyEventCallback = ($img: HTMLImageElement | null, key: number) => async (evt: ClipboardEvent) => {
     if (!$img) return
 
     const clipboardItems = evt.clipboardData?.items;
     const items = [].slice.call(clipboardItems).filter((item: any) => {
       return item?.type?.indexOf('image') !== -1;
     });
-    
+
     if (items.length === 0) {
       return;
     }
@@ -49,18 +50,18 @@ function App() {
     const blob = item.getAsFile();
 
     $img.src = URL.createObjectURL(blob);
-    $img.blob = blob;
+    blobs.current[key] = blob;
 
     $img.onload = async () => {
       if (!isEmpty(imgRef2.current!.src) && !isEmpty(imgRef1.current!.src)) {
-        let a = imgRef1.current!.src;
-        let b = imgRef2.current!.src;
+        let a: any = imgRef1.current!.src;
+        let b: any = imgRef2.current!.src;
 
         if (isDifferentSize(imgRef1!.current!, imgRef2.current!)) {
           const size = getSmallSize(imgRef1.current!, imgRef2.current!)
 
-          a = await resizeImage(imgRef1.current!.blob, size.width, size.height)
-          b = await resizeImage(imgRef2.current!.blob, size.width, size.height)
+          a = await resizeImage(blobs.current[1], size.width, size.height) || ''
+          b = await resizeImage(blobs.current[2], size.width, size.height) || ''
         }
 
         const result = await getCompareResult(a, b) as string;
@@ -70,11 +71,11 @@ function App() {
   }
 
   useEffect(() => {
-    boxRef1.current!.addEventListener('paste', copyEventCallback(imgRef1.current));
-    boxRef2.current!.addEventListener('paste', copyEventCallback(imgRef2.current));
+    boxRef1.current!.addEventListener('paste', copyEventCallback(imgRef1.current, 1));
+    boxRef2.current!.addEventListener('paste', copyEventCallback(imgRef2.current, 2));
     return () => {
-      boxRef1.current!.removeEventListener('paste', copyEventCallback(imgRef1.current));
-      boxRef2.current!.removeEventListener('paste', copyEventCallback(imgRef2.current));
+      boxRef1.current!.removeEventListener('paste', copyEventCallback(imgRef1.current, 1));
+      boxRef2.current!.removeEventListener('paste', copyEventCallback(imgRef2.current, 2));
     }
   }, [])
 

@@ -1,6 +1,6 @@
-const dataUrlToBlob = function (url) {
+const dataUrlToBlob = function (url: string) {
   const arr = url.split(',');
-  const mime = arr[0].match(/:(.*?);/)[1];
+  const mime = arr[0]!.match(/:(.*?);/)![1];
   const str = atob(arr[1]);
   let length = str.length;
   const uintArr = new Uint8Array(length);
@@ -10,7 +10,7 @@ const dataUrlToBlob = function (url) {
   return new Blob([uintArr], { type: mime });
 };
 
-export const resizeImage = (image, width = 0, height = 0): Promise<string> => {
+export const resizeImage = (image: Blob, width = 0, height = 0): Promise<string | Blob | null> => {
   return new Promise(function (resolve, reject) {
     const reader = new FileReader();
 
@@ -31,7 +31,7 @@ export const resizeImage = (image, width = 0, height = 0): Promise<string> => {
         const h = height;
         canvas.width = w;
         canvas.height = h;
-        context.drawImage(ele, 0, 0, w, h);
+        context!.drawImage(ele, 0, 0, w, h);
 
         // Get the data of resized image
         'toBlob' in canvas
@@ -46,8 +46,8 @@ export const resizeImage = (image, width = 0, height = 0): Promise<string> => {
       });
 
       // Set the source
-      if (typeof e.target.result === "string") {
-        ele.src = e.target.result;
+      if (typeof e.target!.result === "string") {
+        ele.src = e.target!.result;
       } else {
         ele.src = '';
       }
